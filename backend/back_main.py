@@ -1,12 +1,9 @@
-from ipaddress import ip_address
-import ipaddress
 from flask import Flask, jsonify, request
 import pymongo
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
-import websocket
 import socket
-
+import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'eTUgV7e4MZqDdgxYplRDbA=='
@@ -73,15 +70,23 @@ def get_data():
 
 @app.route('/api/data', methods=['POST'])
 def add_data():
-    new_data = {
-        'name': request.json['name'],
-        'value': request.json['value']
-    }
+    # new_data = {
+    #     'name': request.json['name'],
+    #     'value': request.json['value']
+    # }
     
     # mongo.db.collection.insert_one(new_data)
     socketio.emit('data_added', {'message': 'Data added successfully'})
     return jsonify({'message': 'Data added successfully'})
 
+@app.route('/api/addreadingdata', methods=['POST'])
+def add_reading_data():
+  reading = request.json.get('reading')
+  if reading is None:
+    return jsonify({'error': 'Reading value is missing'}), 400
+  print(f"got value: {reading}")
+  mycol.insert_one({'reading': reading, 'time': time.ctime()})
+  return jsonify({'message': 'Reading added successfully'})
 
 
 if __name__ == '__main__':
