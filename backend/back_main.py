@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 import pymongo
 from flask_cors import CORS
-import socket
 import time
 
 app = Flask(__name__)
@@ -53,8 +52,6 @@ def add_reading_data():
 
 if __name__ == '__main__':
 
-  # Get the IP address of the network interface
-  network_ip = socket.gethostbyname(socket.getfqdn())
   app.run(debug=True, host="0.0.0.0", port=5000)
 
 
